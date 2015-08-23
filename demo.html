@@ -28,13 +28,14 @@
 <body>
 <div id="control">
     施設 
-    <button onclick="kanimarker.setPosition(null);">なし</button>
-    <button onclick="kanimarker.setPosition(null);">カーリルオフィス</button>
-    <button onclick="kanimarker.setPosition(null);">名古屋大学</button>
-    <button onclick="kanimarker.setPosition(null);">鯖江市</button>
+    <button onclick="kLayer.setFloor(null);">なし</button>
+    <button onclick="kLayer.setFloor(null);">カーリルオフィス</button>
+    <button onclick="kLayer.setFloor(null);">名古屋大学</button>
+    <button onclick="kLayer.setFloor(null);">鯖江市</button>
     <br />
-    <button onclick="kanimarker.showDebugInfomation(true);">デバッグ表示オン</button>
-    <button onclick="kanimarker.showDebugInfomation(false);">デバッグ表示オフ</button>
+    デバッグ表示
+    <button onclick="kLayer.showDebugInfomation(true);">オン</button>
+    <button onclick="kLayer.showDebugInfomation(false);">オフ</button>
 </div>
 <div id="map" class="map"></div>
 <script type="text/javascript" src="kanilayer.js"></script>
