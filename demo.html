@@ -37,8 +37,11 @@
     <button onclick="kanimarker.showDebugInfomation(false);">デバッグ表示オフ</button>
 </div>
 <div id="map" class="map"></div>
+<script type="text/javascript" src="kanilayer.js"></script>
 <script type="text/javascript">
-    var map;
+    var map,view;
+    view = new ol.View({center: [15139450.747885207, 4163881.1440642904],zoom: 6});
+    kLayer = new Kanilayer()
     map = new ol.Map({
         layers: [new ol.layer.Tile({
             source: new ol.source.XYZ({
@@ -50,10 +53,7 @@
         maxZoom: 26,
         minZoom: 18,
         logo: false,
-        view: new ol.View({
-            center: ol.proj.transform([137.528032, 35.573162], 'EPSG:4326', 'EPSG:3857'),
-            zoom: 18
-        })
+        view: view
     });
 </script>
 </body>

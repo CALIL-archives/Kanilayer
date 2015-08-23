@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "kanilayer.js",
+  "sourceRoot": "",
+  "sources": [
+    "kanilayer.coffee"
+  ],
+  "names": [],
+  "mappings": ""
+}
