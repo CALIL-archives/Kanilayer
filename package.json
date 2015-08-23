@@ -1,0 +1,31 @@
+{
+  "name": "Kanilayer",
+  "version": "1.0.0",
+  "description": "Haika Layer Manager for OpenLayers3",
+  "main": "kanilayer.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "gulp": "^3.9.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-codo": "^1.0.3",
+    "gulp-coffee": "^2.3.1",
+    "gulp-util": "^3.0.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CALIL/Kanilayer.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CALIL/Kanilayer/issues"
+  },
+  "homepage": "https://github.com/CALIL/Kanilayer"
+}

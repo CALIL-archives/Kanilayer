@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <title>Kanimarker Demonstration</title>
+    <title>Kanilayer Demonstration</title>
     <link rel="stylesheet" href="http://openlayers.org/en/v3.8.2/css/ol.css" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.8.2/ol.min.js" type="text/javascript"></script>
     <style>
@@ -26,8 +26,17 @@
     </style>
 </head>
 <body>
+<div id="control">
+    施設 
+    <button onclick="kanimarker.setPosition(null);">なし</button>
+    <button onclick="kanimarker.setPosition(null);">カーリルオフィス</button>
+    <button onclick="kanimarker.setPosition(null);">名古屋大学</button>
+    <button onclick="kanimarker.setPosition(null);">鯖江市</button>
+    <br />
+    <button onclick="kanimarker.showDebugInfomation(true);">デバッグ表示オン</button>
+    <button onclick="kanimarker.showDebugInfomation(false);">デバッグ表示オフ</button>
+</div>
 <div id="map" class="map"></div>
-<script src="kanimarker.js" type="text/javascript"></script>
 <script type="text/javascript">
     var map;
     map = new ol.Map({
