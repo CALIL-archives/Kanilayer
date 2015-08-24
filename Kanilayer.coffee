@@ -1,7 +1,41 @@
-#  配架図レイヤーを表示するOpenLayers3プラグイン
+#  驟肴楔蝗ｳ繝ｬ繧､繝､繝ｼ繧定｡ｨ遉ｺ縺吶ｋOpenLayers3繝励Λ繧ｰ繧､繝ｳ
 #
 #  @author sakai@calil.jp
 #  @author ryuuji@calil.jp
 #
 class Kanilayer extends ol.layer.Group
-  map: null
+  tileA: null
+
+  # 驟肴楔蝗ｳ繝ｬ繧､繝､繝ｼ繧剃ｽ懈�舌☆繧�
+  #
+  # @param options {Object} 繧ｪ繝励す繝ｧ繝ｳ
+  # @option kFloor {Number} 繝輔Ο繧｢ID
+  #
+  constructor: (options) ->
+    options_=
+      minResolution: 0.0001
+      maxResolution: 100
+      kFloor: null
+    merge = (obj1, obj2) ->
+      if !obj2
+        obj2 = {}
+      for attr of obj2
+        if obj2.hasOwnProperty(attr)
+          obj1[attr] = obj2[attr]
+    merge(options_,options)
+
+    id = options_.kFloor
+    xid = ("0000000000" + parseInt(id)).slice(-10)
+    tileA = new ol.layer.Tile({
+      source: new ol.source.XYZ({
+        url: "https://tiles.haika.io/" + xid + "/{z}/{x}/{y}.png",
+        maxZoom: 24,
+      }),
+      opacity: 1,
+      preload: 3
+    })
+    options_.layers=[tileA]
+    super(options_)
+
+  setFloorId: (newId) ->
+    return

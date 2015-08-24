@@ -6,11 +6,46 @@ var Kanilayer,
 Kanilayer = (function(superClass) {
   extend(Kanilayer, superClass);
 
-  function Kanilayer() {
-    return Kanilayer.__super__.constructor.apply(this, arguments);
+  Kanilayer.prototype.tileA = null;
+
+  function Kanilayer(options) {
+    var id, merge, options_, tileA, xid;
+    options_ = {
+      minResolution: 0.0001,
+      maxResolution: 100,
+      kFloor: null
+    };
+    merge = function(obj1, obj2) {
+      var attr, results;
+      if (!obj2) {
+        obj2 = {};
+      }
+      results = [];
+      for (attr in obj2) {
+        if (obj2.hasOwnProperty(attr)) {
+          results.push(obj1[attr] = obj2[attr]);
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
+    };
+    merge(options_, options);
+    id = options_.kFloor;
+    xid = ("0000000000" + parseInt(id)).slice(-10);
+    tileA = new ol.layer.Tile({
+      source: new ol.source.XYZ({
+        url: "https://tiles.haika.io/" + xid + "/{z}/{x}/{y}.png",
+        maxZoom: 24
+      }),
+      opacity: 1,
+      preload: 3
+    });
+    options_.layers = [tileA];
+    Kanilayer.__super__.constructor.call(this, options_);
   }
 
-  Kanilayer.prototype.map = null;
+  Kanilayer.prototype.setFloorId = function(newId) {};
 
   return Kanilayer;
 
