@@ -6,15 +6,17 @@ var Kanilayer,
 Kanilayer = (function(superClass) {
   extend(Kanilayer, superClass);
 
+  Kanilayer.prototype.floorId = false;
+
   Kanilayer.prototype.tileA = null;
 
   Kanilayer.prototype.tileB = null;
 
   Kanilayer.prototype.vector = null;
 
-  Kanilayer.prototype.floorId = false;
-
   Kanilayer.prototype.debug_ = false;
+
+  Kanilayer.prototype.fadeAnimation = null;
 
   Kanilayer.prototype.getHaikaTileSource_ = function(id) {
     var xid;
@@ -25,8 +27,15 @@ Kanilayer = (function(superClass) {
     });
   };
 
+  Kanilayer.prototype.getHaikaVectorSource_ = function(id) {
+    return new ol.source.Vector({
+      url: "https://app.haika.io/api/facility/2/" + id + ".geojson",
+      format: new ol.format.GeoJSON()
+    });
+  };
+
   function Kanilayer(options) {
-    var merge, options_;
+    var merge, options_, styleFunction;
     options_ = {
       minResolution: 0.0001,
       maxResolution: 100,
@@ -49,21 +58,156 @@ Kanilayer = (function(superClass) {
     };
     merge(options_, options);
     this.tileA = new ol.layer.Tile({
-      source: this.getHaikaTileSource_(options_.kFloor),
+      source: null,
       opacity: 1,
       preload: 3
     });
-    options_.layers = [this.tileA];
+    this.tileB = new ol.layer.Tile({
+      source: null,
+      opacity: 0,
+      visible: false,
+      preload: 3
+    });
+    styleFunction = function(feature, resolution) {
+      var ref, styleOptions, text;
+      if (resolution < 1.0) {
+        switch (feature.get('type')) {
+          case 'shelf':
+            if (resolution < 0.28) {
+              text = (ref = feature.get('label')) != null ? ref : '';
+            } else {
+              text = '';
+            }
+            styleOptions = {
+              stroke: new ol.style.Stroke({
+                color: 'blue',
+                width: 1
+              }),
+              text: new ol.style.Text({
+                textAlign: 'center',
+                textBaseline: 'hanging',
+                font: 'Arial',
+                text: text,
+                fill: new ol.style.Fill({
+                  color: [0, 0, 0, 1]
+                }),
+                stroke: new ol.style.Stroke({
+                  color: [255, 255, 255, 1],
+                  width: 1.5
+                }),
+                scale: 1.5,
+                offsetX: 0,
+                offsetY: 0,
+                rotation: 0
+              })
+            };
+            break;
+          case 'beacon':
+            styleOptions = {
+              fill: new ol.style.Fill({
+                color: [144, 151, 154, 0.3]
+              }),
+              stroke: new ol.style.Stroke({
+                color: [56, 149, 255, 1]
+              }),
+              text: new ol.style.Text({
+                textAlign: 'center',
+                textBaseline: 'hanging',
+                font: 'Arial',
+                text: feature.get('lane') + feature.get('minor'),
+                fill: new ol.style.Fill({
+                  color: [0, 0, 255, 0.3]
+                }),
+                scale: 0.8,
+                offsetX: 0,
+                offsetY: 0,
+                rotation: 0
+              })
+            };
+            break;
+          default:
+            styleOptions = {};
+        }
+        return [new ol.style.Style(styleOptions)];
+      } else {
+        return [new ol.style.Style()];
+      }
+    };
+    this.vector = new ol.layer.Vector({
+      source: null,
+      style: styleFunction,
+      opacity: 1
+    });
+    options_.layers = [this.tileB, this.tileA, this.vector];
     Kanilayer.__super__.constructor.call(this, options_);
     this.tileA.on('postcompose', this.postcompose_, this);
+    this.tileA.on('precompose', this.precompose_, this);
+    if (options_.kFloor != null) {
+      this.setFloorId(options_.kFloor, false);
+    }
   }
 
   Kanilayer.prototype.setFloorId = function(newId, animation) {
+    var newSource;
     if (animation == null) {
       animation = true;
     }
-    this.tileA.setSource(this.getHaikaTileSource_(newId));
-    return this.changed();
+    if (this.floorId !== newId) {
+      this.floorId = newId;
+      if (animation) {
+        this.tileB.setSource(this.tileA.getSource());
+        this.tileB.setOpacity(1);
+        this.tileB.setVisible(true);
+        this.tileA.setOpacity(0);
+      } else {
+        this.tileA.setOpacity(1);
+        this.tileB.setVisible(false);
+        this.tileB.setSource(null);
+      }
+      if (newId != null) {
+        newSource = this.getHaikaTileSource_(newId);
+        this.tileA.setSource(newSource);
+        this.vector.setSource(this.getHaikaVectorSource_(newId));
+      } else {
+        newSource = this.getHaikaTileSource_(0);
+        this.tileA.setSource(newSource);
+        this.vector.setSource(null);
+      }
+      if (animation) {
+        this.fadeAnimation = {
+          start: new Date(),
+          phase: 0,
+          tilesStarted: 0,
+          tilesLoaded: 0
+        };
+        if (newId == null) {
+          this.fadeAnimation.phase = 2;
+        } else {
+          newSource.on('tileloadstart', (function(_this) {
+            return function() {
+              if (_this.fadeAnimation != null) {
+                return _this.fadeAnimation.tilesStarted++;
+              }
+            };
+          })(this));
+          newSource.on('tileloadend', (function(_this) {
+            return function() {
+              if (_this.fadeAnimation != null) {
+                return _this.fadeAnimation.tilesLoaded++;
+              }
+            };
+          })(this));
+          newSource.on('tileloaderror', (function(_this) {
+            return function() {
+              if (_this.fadeAnimation != null) {
+                return _this.fadeAnimation.tilesLoaded++;
+              }
+            };
+          })(this));
+        }
+      }
+      return this.changed();
+    }
   };
 
   Kanilayer.prototype.showDebugInfomation = function(newValue) {
@@ -71,11 +215,52 @@ Kanilayer = (function(superClass) {
     return this.changed();
   };
 
+  Kanilayer.prototype.precompose_ = function(event) {
+    var frameState, time;
+    frameState = event.frameState;
+    if (this.fadeAnimation != null) {
+      frameState.animate = true;
+      if (this.fadeAnimation.phase === 0) {
+        if (frameState.time - this.fadeAnimation.start > 2000) {
+          this.fadeAnimation.phase = 1;
+          return this.fadeAnimation.start = new Date();
+        } else if (this.fadeAnimation.tilesStarted > 0 && this.fadeAnimation.tilesLoaded > 0) {
+          this.fadeAnimation.phase = 1;
+          if (frameState.time - this.fadeAnimation.start > 50) {
+            return this.fadeAnimation.start = new Date();
+          }
+        }
+      } else if (this.fadeAnimation.phase === 1) {
+        time = (frameState.time - this.fadeAnimation.start) / 200;
+        if (time <= 1) {
+          return this.tileA.setOpacity(time);
+        } else {
+          this.tileA.setOpacity(1);
+          this.fadeAnimation.phase = 2;
+          return this.fadeAnimation.start = new Date();
+        }
+      } else if (this.fadeAnimation.phase === 2) {
+        time = (frameState.time - this.fadeAnimation.start) / 150;
+        if (time <= 1) {
+          return this.tileB.setOpacity(1 - time);
+        } else {
+          this.tileB.setVisible(false);
+          this.tileB.setSource(null);
+          return this.fadeAnimation = null;
+        }
+      }
+    }
+  };
+
   Kanilayer.prototype.postcompose_ = function(event) {
     var context, debugText;
     if (this.debug_) {
       context = event.context;
       debugText = "[Kanilayer]";
+      if (this.fadeAnimation) {
+        debugText += ' アニメーション中 フェーズ:';
+        debugText += this.fadeAnimation.phase;
+      }
       context.save();
       context.fillStyle = "rgba(255, 255, 255, 0.6)";
       context.fillRect(0, context.canvas.height - 20, context.canvas.width, 20);
