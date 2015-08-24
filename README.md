@@ -1,5 +1,5 @@
-# Kanimarker
-Haika Layer Manager for OpenLayers3
+# Kanilayer
+Haika Layer for OpenLayers3
 
 ## Compile
 
