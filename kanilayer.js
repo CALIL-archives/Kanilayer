@@ -8,6 +8,10 @@ Kanilayer = (function(superClass) {
 
   Kanilayer.prototype.tileA = null;
 
+  Kanilayer.prototype.tileB = null;
+
+  Kanilayer.prototype.vector = null;
+
   function Kanilayer(options) {
     var id, merge, options_, tileA, xid;
     options_ = {
@@ -45,7 +49,11 @@ Kanilayer = (function(superClass) {
     Kanilayer.__super__.constructor.call(this, options_);
   }
 
-  Kanilayer.prototype.setFloorId = function(newId) {};
+  Kanilayer.prototype.setFloorId = function(newId, animation) {
+    if (animation == null) {
+      animation = True;
+    }
+  };
 
   return Kanilayer;
 

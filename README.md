@@ -7,6 +7,10 @@ Haika Layer Manager for OpenLayers3
 npm update
 gulp
 ```
+## Demo
+
+https://s3-ap-northeast-1.amazonaws.com/kanilayer/demo.html
 
 ## Deploy Endpoint
 
+https://s3-ap-northeast-1.amazonaws.com/kanilayer/kanilayer.js

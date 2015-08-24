@@ -5,6 +5,8 @@
 #
 class Kanilayer extends ol.layer.Group
   tileA: null
+  tileB: null
+  vector: null
 
   # 配架図レイヤーを作成する
   #
@@ -37,5 +39,9 @@ class Kanilayer extends ol.layer.Group
     options_.layers=[tileA]
     super(options_)
 
-  setFloorId: (newId) ->
+  # フロアを変更する
+  #
+  # @param newId {Number} フロアID
+  #
+  setFloorId: (newId,animation=True) ->
     return
