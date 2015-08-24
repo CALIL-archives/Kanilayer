@@ -12,8 +12,21 @@ Kanilayer = (function(superClass) {
 
   Kanilayer.prototype.vector = null;
 
+  Kanilayer.prototype.floorId = false;
+
+  Kanilayer.prototype.debug_ = false;
+
+  Kanilayer.prototype.getHaikaTileSource_ = function(id) {
+    var xid;
+    xid = ("0000000000" + parseInt(id)).slice(-10);
+    return new ol.source.XYZ({
+      url: "https://tiles.haika.io/" + xid + "/{z}/{x}/{y}.png",
+      maxZoom: 24
+    });
+  };
+
   function Kanilayer(options) {
-    var id, merge, options_, tileA, xid;
+    var merge, options_;
     options_ = {
       minResolution: 0.0001,
       maxResolution: 100,
@@ -35,23 +48,41 @@ Kanilayer = (function(superClass) {
       return results;
     };
     merge(options_, options);
-    id = options_.kFloor;
-    xid = ("0000000000" + parseInt(id)).slice(-10);
-    tileA = new ol.layer.Tile({
-      source: new ol.source.XYZ({
-        url: "https://tiles.haika.io/" + xid + "/{z}/{x}/{y}.png",
-        maxZoom: 24
-      }),
+    this.tileA = new ol.layer.Tile({
+      source: this.getHaikaTileSource_(options_.kFloor),
       opacity: 1,
       preload: 3
     });
-    options_.layers = [tileA];
+    options_.layers = [this.tileA];
     Kanilayer.__super__.constructor.call(this, options_);
+    this.tileA.on('postcompose', this.postcompose_, this);
   }
 
   Kanilayer.prototype.setFloorId = function(newId, animation) {
     if (animation == null) {
-      animation = True;
+      animation = true;
+    }
+    this.tileA.setSource(this.getHaikaTileSource_(newId));
+    return this.changed();
+  };
+
+  Kanilayer.prototype.showDebugInfomation = function(newValue) {
+    this.debug_ = newValue;
+    return this.changed();
+  };
+
+  Kanilayer.prototype.postcompose_ = function(event) {
+    var context, debugText;
+    if (this.debug_) {
+      context = event.context;
+      debugText = "[Kanilayer]";
+      context.save();
+      context.fillStyle = "rgba(255, 255, 255, 0.6)";
+      context.fillRect(0, context.canvas.height - 20, context.canvas.width, 20);
+      context.font = "10px";
+      context.fillStyle = "black";
+      context.fillText(debugText, 10, context.canvas.height - 7);
+      return context.restore();
     }
   };
 

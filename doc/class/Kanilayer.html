@@ -54,10 +54,40 @@
     </li>
   </ul>
 </div>
+      <h2>Property Summary</h2>
+      <dl class='properties'>
+        <dt id='floorId-property'>
+          <span class='signature'>
+            (Number)
+            <b>
+              floorId
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          フロアID（読み込み専用） 
+        </dd>
+      </dl>
       <h2>Variables Summary</h2>
       <dl class='constants'>
   <dt id='tileA-variable'>
     tileA
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='tileB-variable'>
+    tileB
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='vector-variable'>
+    vector
     =
   </dt>
   <dd>
@@ -72,10 +102,23 @@
       <a href='#setFloorId-dynamic'>
         #
 (void)
-<b>setFloorId</b><span>(newId)</span>
+<b>setFloorId</b><span>(newId, animation = true)</span>
       </a>
     </span>
     <span class='desc'>
+      フロアを変更する 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#showDebugInfomation-dynamic'>
+        #
+(void)
+<b>showDebugInfomation</b><span>(newValue)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      デバッグ表示の有無を設定する 
     </span>
   </li>
 </ul>
@@ -128,15 +171,58 @@
     <p class='signature' id='setFloorId-dynamic'>
       #
 (void)
-<b>setFloorId</b><span>(newId)</span>
+<b>setFloorId</b><span>(newId, animation = true)</span>
       <br>
     </p>
-    
+    <div class='docstring'>
+  <p>フロアを変更する</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>newId</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>フロアID </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='showDebugInfomation-dynamic'>
+      #
+(void)
+<b>showDebugInfomation</b><span>(newValue)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>デバッグ表示の有無を設定する</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>newValue</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>する:true, しない: false </span>
+    </li>
+  </ul>
+</div>
   </div>
 </div>
     </div>
     <div id='footer'>
-  August 24, 15 11:52:16 by
+  August 24, 15 17:08:07 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
