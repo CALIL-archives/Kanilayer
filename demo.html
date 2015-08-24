@@ -27,12 +27,12 @@
 </head>
 <body>
 <div id="control">
-    施設 
+    施設
     <button onclick="kLayer.setFloor(null);">なし</button>
-    <button onclick="kLayer.setFloor(null);">カーリルオフィス</button>
+    <button onclick="kLayer.setFloor(16);">カーリルオフィス</button>
     <button onclick="kLayer.setFloor(null);">名古屋大学</button>
     <button onclick="kLayer.setFloor(null);">鯖江市</button>
-    <br />
+    <br/>
     デバッグ表示
     <button onclick="kLayer.showDebugInfomation(true);">オン</button>
     <button onclick="kLayer.showDebugInfomation(false);">オフ</button>
@@ -40,8 +40,9 @@
 <div id="map" class="map"></div>
 <script type="text/javascript" src="kanilayer.js"></script>
 <script type="text/javascript">
-    var map,view;
-    view = new ol.View({center: [15139450.747885207, 4163881.1440642904],zoom: 6});
+    var map, view;
+    //view = new ol.View({center: [15139450.747885207, 4163881.1440642904], zoom: 6});
+    view = new ol.View({center: ol.proj.transform([137.528032,35.573162], 'EPSG:4326', 'EPSG:3857'), zoom: 20});
     kLayer = new Kanilayer()
     map = new ol.Map({
         layers: [new ol.layer.Tile({
@@ -56,6 +57,27 @@
         logo: false,
         view: view
     });
+    id = 16;
+    var newTile, xid;
+
+    xid = ("0000000000" + parseInt(id)).slice(-10);
+    newTile = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: "https://tiles.haika.io/" + xid + "/{z}/{x}/{y}.png",
+            maxZoom: 24,
+        }),
+        opacity: 1,
+        preload: 3
+    });
+
+    layerGroup = new ol.layer.Group({
+        layers : [newTile],
+        minResolution: 0.0001,
+        maxResolution: 100,
+    })
+
+    map.addLayer(layerGroup);
+
 </script>
 </body>
 </html>
