@@ -2,7 +2,7 @@
 #
 #  @author sakai@calil.jp
 #  @author ryuuji@calil.jp
-#
+
 class Kanilayer extends ol.layer.Group
   # @property [Number] 現在のフロアID（読み込み専用）
   floorId: false
@@ -41,8 +41,9 @@ class Kanilayer extends ol.layer.Group
   # @return {ol.source} ベクターソース
   getHaikaVectorSource_: (id)->
     return new ol.source.Vector(
-      url: "https://app.haika.io/api/facility/2/#{id}.geojson",
-      format: new ol.format.GeoJSON())
+      url: "https://app.haika.io/api/facility/2/#{id}.geojson"
+      format: new ol.format.GeoJSON()
+    )
 
   # 配架図レイヤーを作成する
   #
@@ -145,10 +146,12 @@ class Kanilayer extends ol.layer.Group
         @tileB.setOpacity(1)
         @tileB.setVisible(true)
         @tileA.setOpacity(0)
+        @vector.setOpacity(0)
       else
         @tileA.setOpacity(1)
         @tileB.setVisible(false)
         @tileB.setSource(null)
+        @vector.setOpacity(1)
 
       if newId?
         newSource = @getHaikaTileSource_(newId)
@@ -221,7 +224,9 @@ class Kanilayer extends ol.layer.Group
         time = (frameState.time - @fadeAnimation.start) / 150
         if time <= 1
           @tileB.setOpacity(1 - time)
+          @vector.setOpacity(time)
         else
+          @vector.setOpacity(1)
           @tileB.setVisible(false)
           @tileB.setSource(null)
           @fadeAnimation = null

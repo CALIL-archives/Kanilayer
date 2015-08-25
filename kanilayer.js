@@ -159,10 +159,12 @@ Kanilayer = (function(superClass) {
         this.tileB.setOpacity(1);
         this.tileB.setVisible(true);
         this.tileA.setOpacity(0);
+        this.vector.setOpacity(0);
       } else {
         this.tileA.setOpacity(1);
         this.tileB.setVisible(false);
         this.tileB.setSource(null);
+        this.vector.setOpacity(1);
       }
       if (newId != null) {
         newSource = this.getHaikaTileSource_(newId);
@@ -242,8 +244,10 @@ Kanilayer = (function(superClass) {
       } else if (this.fadeAnimation.phase === 2) {
         time = (frameState.time - this.fadeAnimation.start) / 150;
         if (time <= 1) {
-          return this.tileB.setOpacity(1 - time);
+          this.tileB.setOpacity(1 - time);
+          return this.vector.setOpacity(time);
         } else {
+          this.vector.setOpacity(1);
           this.tileB.setVisible(false);
           this.tileB.setSource(null);
           return this.fadeAnimation = null;
