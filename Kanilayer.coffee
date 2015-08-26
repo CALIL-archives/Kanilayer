@@ -93,14 +93,15 @@ class Kanilayer extends ol.layer.Group
               text = ''
             if parseInt(@targetShelf)==parseInt(feature.get('id'))
               styleOptions =
-                stroke: new ol.style.Stroke(color: 'blue', width: 2)
+                stroke: new ol.style.Stroke(color: '#9E7E49', width: 2)
+                fill:new ol.style.Fill(color: '#FFBE4D')
                 text: new ol.style.Text(
                   textAlign: 'center'
                   textBaseline: 'hanging'
-                  font: 'Arial'
-                  text: text+"(目的地)"
-                  fill: new ol.style.Fill(color: [0, 0, 0, 1])
-                  stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 1.5)
+                  font: 'Arial bold'
+                  text: "（目的地）"
+                  fill: new ol.style.Fill(color: '#D95C02')
+                  stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 3)
                   scale: 2
                   offsetX: 0
                   offsetY: 0
