@@ -22,6 +22,13 @@ class Kanilayer extends ol.layer.Group
   # @nodoc アニメーション用の内部ステート
   fadeAnimation: null
 
+  targetShelf: null
+
+  # 強調表示する棚IDを指定
+  setTargetShelf: (id)->
+    @targetShelf = id
+    @vector.changed()
+
   # 配架図のタイルソースオブジェクトを取得
   #　
   # @nodoc
@@ -84,19 +91,37 @@ class Kanilayer extends ol.layer.Group
               text = feature.get('label') ? ''
             else
               text = ''
-            styleOptions =
-              #stroke: new ol.style.Stroke(color: 'blue', width: 1)
-              text: new ol.style.Text(
-                textAlign: 'center'
-                textBaseline: 'hanging'
-                font: 'Arial'
-                text: text
-                fill: new ol.style.Fill(color: [0, 0, 0, 1])
-                stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 1.5)
-                scale: 1.5
-                offsetX: 0
-                offsetY: 0
-                rotation: 0)
+
+            console.log(feature.get('id'))
+            if parseInt(@targetShelf)==parseInt(feature.get('id'))
+              styleOptions =
+                stroke: new ol.style.Stroke(color: 'blue', width: 2)
+                text: new ol.style.Text(
+                  textAlign: 'center'
+                  textBaseline: 'hanging'
+                  font: 'Arial'
+                  text: text+"(目的地)"
+                  fill: new ol.style.Fill(color: [0, 0, 0, 1])
+                  stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 1.5)
+                  scale: 2
+                  offsetX: 0
+                  offsetY: 0
+                  rotation: 0)
+
+            else
+              styleOptions =
+                #stroke: new ol.style.Stroke(color: 'blue', width: 1)
+                text: new ol.style.Text(
+                  textAlign: 'center'
+                  textBaseline: 'hanging'
+                  font: 'Arial'
+                  text: text
+                  fill: new ol.style.Fill(color: [0, 0, 0, 1])
+                  stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 1.5)
+                  scale: 1.5
+                  offsetX: 0
+                  offsetY: 0
+                  rotation: 0)
           when 'beacon'
             if @debug_==true
               styleOptions =

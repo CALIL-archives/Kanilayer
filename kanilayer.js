@@ -18,6 +18,13 @@ Kanilayer = (function(superClass) {
 
   Kanilayer.prototype.fadeAnimation = null;
 
+  Kanilayer.prototype.targetShelf = null;
+
+  Kanilayer.prototype.setTargetShelf = function(id) {
+    this.targetShelf = id;
+    return this.vector.changed();
+  };
+
   Kanilayer.prototype.getHaikaTileSource_ = function(id) {
     var xid;
     xid = ("0000000000" + parseInt(id)).slice(-10);
@@ -79,25 +86,52 @@ Kanilayer = (function(superClass) {
               } else {
                 text = '';
               }
-              styleOptions = {
-                text: new ol.style.Text({
-                  textAlign: 'center',
-                  textBaseline: 'hanging',
-                  font: 'Arial',
-                  text: text,
-                  fill: new ol.style.Fill({
-                    color: [0, 0, 0, 1]
-                  }),
+              console.log(feature.get('id'));
+              if (parseInt(_this.targetShelf) === parseInt(feature.get('id'))) {
+                styleOptions = {
                   stroke: new ol.style.Stroke({
-                    color: [255, 255, 255, 1],
-                    width: 1.5
+                    color: 'blue',
+                    width: 2
                   }),
-                  scale: 1.5,
-                  offsetX: 0,
-                  offsetY: 0,
-                  rotation: 0
-                })
-              };
+                  text: new ol.style.Text({
+                    textAlign: 'center',
+                    textBaseline: 'hanging',
+                    font: 'Arial',
+                    text: text + "(目的地)",
+                    fill: new ol.style.Fill({
+                      color: [0, 0, 0, 1]
+                    }),
+                    stroke: new ol.style.Stroke({
+                      color: [255, 255, 255, 1],
+                      width: 1.5
+                    }),
+                    scale: 2,
+                    offsetX: 0,
+                    offsetY: 0,
+                    rotation: 0
+                  })
+                };
+              } else {
+                styleOptions = {
+                  text: new ol.style.Text({
+                    textAlign: 'center',
+                    textBaseline: 'hanging',
+                    font: 'Arial',
+                    text: text,
+                    fill: new ol.style.Fill({
+                      color: [0, 0, 0, 1]
+                    }),
+                    stroke: new ol.style.Stroke({
+                      color: [255, 255, 255, 1],
+                      width: 1.5
+                    }),
+                    scale: 1.5,
+                    offsetX: 0,
+                    offsetY: 0,
+                    rotation: 0
+                  })
+                };
+              }
               break;
             case 'beacon':
               if (_this.debug_ === true) {
