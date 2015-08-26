@@ -76,7 +76,7 @@ class Kanilayer extends ol.layer.Group
       preload: 3
     })
 
-    styleFunction = (feature, resolution) ->
+    styleFunction = (feature, resolution) =>
       if resolution < 1.0
         switch feature.get('type')
           when 'shelf'
@@ -85,7 +85,7 @@ class Kanilayer extends ol.layer.Group
             else
               text = ''
             styleOptions =
-              stroke: new ol.style.Stroke(color: 'blue', width: 1)
+              #stroke: new ol.style.Stroke(color: 'blue', width: 1)
               text: new ol.style.Text(
                 textAlign: 'center'
                 textBaseline: 'hanging'
@@ -98,19 +98,28 @@ class Kanilayer extends ol.layer.Group
                 offsetY: 0
                 rotation: 0)
           when 'beacon'
-            styleOptions =
-              fill: new ol.style.Fill(color: [144, 151, 154, 0.3])
-              stroke: new ol.style.Stroke(color: [56, 149, 255, 1])
-              text: new ol.style.Text(
-                textAlign: 'center'
-                textBaseline: 'hanging'
-                font: 'Arial'
-                text: feature.get('lane') + feature.get('minor')
-                fill: new ol.style.Fill(color: [0, 0, 255, 0.3])
-                scale: 0.8
-                offsetX: 0
-                offsetY: 0
-                rotation: 0)
+            if @debug_==true
+              styleOptions =
+                image: new ol.style.Circle({
+                  radius: 5,
+                  fill: null,
+                  stroke: new ol.style.Stroke({
+                    color: '#000000'
+                  })
+                })
+                text: new ol.style.Text(
+                  textAlign: 'left'
+                  textBaseline: 'middle'
+                  font: 'Arial 12px'
+                  text:  feature.get('minor')+ ' ('+feature.get('lane')+')'
+                  fill: new ol.style.Fill(color: [0, 0, 0, 1])
+                  stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 1.5)
+                  scale: 1
+                  offsetX: 8
+                  offsetY: 0
+                  rotation: 0)
+            else
+              styleOptions = {}
           else
             styleOptions = {}
         return [new ol.style.Style(styleOptions)]

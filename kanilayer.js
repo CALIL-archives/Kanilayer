@@ -68,71 +68,78 @@ Kanilayer = (function(superClass) {
       visible: false,
       preload: 3
     });
-    styleFunction = function(feature, resolution) {
-      var ref, styleOptions, text;
-      if (resolution < 1.0) {
-        switch (feature.get('type')) {
-          case 'shelf':
-            if (resolution < 0.28) {
-              text = (ref = feature.get('label')) != null ? ref : '';
-            } else {
-              text = '';
-            }
-            styleOptions = {
-              stroke: new ol.style.Stroke({
-                color: 'blue',
-                width: 1
-              }),
-              text: new ol.style.Text({
-                textAlign: 'center',
-                textBaseline: 'hanging',
-                font: 'Arial',
-                text: text,
-                fill: new ol.style.Fill({
-                  color: [0, 0, 0, 1]
-                }),
-                stroke: new ol.style.Stroke({
-                  color: [255, 255, 255, 1],
-                  width: 1.5
-                }),
-                scale: 1.5,
-                offsetX: 0,
-                offsetY: 0,
-                rotation: 0
-              })
-            };
-            break;
-          case 'beacon':
-            styleOptions = {
-              fill: new ol.style.Fill({
-                color: [144, 151, 154, 0.3]
-              }),
-              stroke: new ol.style.Stroke({
-                color: [56, 149, 255, 1]
-              }),
-              text: new ol.style.Text({
-                textAlign: 'center',
-                textBaseline: 'hanging',
-                font: 'Arial',
-                text: feature.get('lane') + feature.get('minor'),
-                fill: new ol.style.Fill({
-                  color: [0, 0, 255, 0.3]
-                }),
-                scale: 0.8,
-                offsetX: 0,
-                offsetY: 0,
-                rotation: 0
-              })
-            };
-            break;
-          default:
-            styleOptions = {};
+    styleFunction = (function(_this) {
+      return function(feature, resolution) {
+        var ref, styleOptions, text;
+        if (resolution < 1.0) {
+          switch (feature.get('type')) {
+            case 'shelf':
+              if (resolution < 0.28) {
+                text = (ref = feature.get('label')) != null ? ref : '';
+              } else {
+                text = '';
+              }
+              styleOptions = {
+                text: new ol.style.Text({
+                  textAlign: 'center',
+                  textBaseline: 'hanging',
+                  font: 'Arial',
+                  text: text,
+                  fill: new ol.style.Fill({
+                    color: [0, 0, 0, 1]
+                  }),
+                  stroke: new ol.style.Stroke({
+                    color: [255, 255, 255, 1],
+                    width: 1.5
+                  }),
+                  scale: 1.5,
+                  offsetX: 0,
+                  offsetY: 0,
+                  rotation: 0
+                })
+              };
+              break;
+            case 'beacon':
+              if (_this.debug_ === true) {
+                styleOptions = {
+                  image: new ol.style.Circle({
+                    radius: 5,
+                    fill: null,
+                    stroke: new ol.style.Stroke({
+                      color: '#000000'
+                    })
+                  }),
+                  text: new ol.style.Text({
+                    textAlign: 'left',
+                    textBaseline: 'middle',
+                    font: 'Arial 12px',
+                    text: feature.get('minor') + ' (' + feature.get('lane') + ')',
+                    fill: new ol.style.Fill({
+                      color: [0, 0, 0, 1]
+                    }),
+                    stroke: new ol.style.Stroke({
+                      color: [255, 255, 255, 1],
+                      width: 1.5
+                    }),
+                    scale: 1,
+                    offsetX: 8,
+                    offsetY: 0,
+                    rotation: 0
+                  })
+                };
+              } else {
+                styleOptions = {};
+              }
+              break;
+            default:
+              styleOptions = {};
+          }
+          return [new ol.style.Style(styleOptions)];
+        } else {
+          return [new ol.style.Style()];
         }
-        return [new ol.style.Style(styleOptions)];
-      } else {
-        return [new ol.style.Style()];
-      }
-    };
+      };
+    })(this);
     this.vector = new ol.layer.Vector({
       source: null,
       style: styleFunction,
