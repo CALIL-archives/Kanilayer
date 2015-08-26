@@ -86,7 +86,6 @@ Kanilayer = (function(superClass) {
               } else {
                 text = '';
               }
-              console.log(feature.get('id'));
               if (parseInt(_this.targetShelf) === parseInt(feature.get('id'))) {
                 styleOptions = {
                   stroke: new ol.style.Stroke({

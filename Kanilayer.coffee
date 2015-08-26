@@ -91,8 +91,6 @@ class Kanilayer extends ol.layer.Group
               text = feature.get('label') ? ''
             else
               text = ''
-
-            console.log(feature.get('id'))
             if parseInt(@targetShelf)==parseInt(feature.get('id'))
               styleOptions =
                 stroke: new ol.style.Stroke(color: 'blue', width: 2)
