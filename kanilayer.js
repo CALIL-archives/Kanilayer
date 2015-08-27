@@ -110,6 +110,7 @@ Kanilayer = (function(superClass) {
                     scale: 2,
                     offsetX: 0,
                     offsetY: 0,
+                    zIndex: 9999,
                     rotation: 0
                   })
                 };
