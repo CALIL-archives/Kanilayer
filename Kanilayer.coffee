@@ -105,8 +105,8 @@ class Kanilayer extends ol.layer.Group
                   scale: 2
                   offsetX: 0
                   offsetY: 0
-                  zIndex: 9999
                   rotation: 0)
+                zIndex: 9999
             else
               styleOptions =
                 #stroke: new ol.style.Stroke(color: 'blue', width: 1)
