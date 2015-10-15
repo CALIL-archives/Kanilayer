@@ -282,4 +282,4 @@ class Kanilayer extends ol.layer.Group
 
   # 目的地の画像URL
   targetImageUrl: null
-  
+
