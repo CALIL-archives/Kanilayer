@@ -5,6 +5,7 @@ machine:
 dependencies:
   post:
     - npm update
+    - npm install -g codo
 test:
   override:
     - ./node_modules/.bin/gulp
