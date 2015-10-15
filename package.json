@@ -7,7 +7,6 @@
     "doc": "doc"
   },
   "dependencies": {
-    "gulp": "^3.9.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
@@ -22,7 +21,7 @@
     "type": "git",
     "url": "https://github.com/CALIL/Kanilayer.git"
   },
-  "author": "",
+  "author": "CALIL Inc.",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/CALIL/Kanilayer/issues"
