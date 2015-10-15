@@ -13,7 +13,7 @@ class Kanilayer extends ol.layer.Group
   # @nodoc 背面タイル (切り替えの際に一時的に使用する)
   tileB: null
 
-  # @nodec ベクターレイヤー
+  # @nodoc ベクターレイヤー
   vector: null
 
   # @nodoc デバッグ表示の有無(内部ステート)
