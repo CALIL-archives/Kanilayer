@@ -2,7 +2,9 @@
 
 Haika Layer for OpenLayers3
 
-## Compile
+[![Circle CI](https://circleci.com/gh/CALIL/Kanilayer.svg?style=svg)](https://circleci.com/gh/CALIL/Kanilayer)
+
+## Build
 
 ```bash
 npm update
