@@ -319,6 +319,8 @@ Kanilayer = (function(superClass) {
     }
   };
 
+  Kanilayer.prototype.targetImageUrl = null;
+
   return Kanilayer;
 
 })(ol.layer.Group);

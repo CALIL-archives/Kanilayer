@@ -279,3 +279,7 @@ class Kanilayer extends ol.layer.Group
       context.fillStyle = "black"
       context.fillText(debugText, 10, context.canvas.height - 7)
       context.restore()
+
+  # 目的地の画像URL
+  targetImageUrl: null
+  
