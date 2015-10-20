@@ -4,7 +4,7 @@
 #  @author ryuuji@calil.jp
 
 class Kanilayer extends ol.layer.Group
-  # @property [Number] 現在のフロアID（読み込み専用）
+  # @property [String] 現在のフロアID（読み込み専用）
   floorId: false
 
   # @nodoc 前面タイル (メインで使用する)
@@ -32,7 +32,7 @@ class Kanilayer extends ol.layer.Group
   # 配架図のタイルソースオブジェクトを取得
   #　
   # @nodoc
-  # @param id {Number} フロアID
+  # @param id {String} フロアID
   # @return {ol.source} タイルソース
   getHaikaTileSource_: (id)->
     xid = ("0000000000" + parseInt(id)).slice(-10)
@@ -44,7 +44,7 @@ class Kanilayer extends ol.layer.Group
   # 配架図のベクターソースオブジェクトを取得
   #　
   # @nodoc
-  # @param id {Number} フロアID
+  # @param id {String} フロアID
   # @return {ol.source} ベクターソース
   getHaikaVectorSource_: (id)->
     return new ol.source.Vector(
@@ -55,7 +55,7 @@ class Kanilayer extends ol.layer.Group
   # 配架図レイヤーを作成する
   #
   # @param options {Object} オプション
-  # @option kFloor {Number} フロアID
+  # @option kFloor {String} フロアID
   #
   constructor: (options) ->
     options_ =
@@ -167,7 +167,7 @@ class Kanilayer extends ol.layer.Group
 
   # フロアを変更する
   #
-  # @param newId {Number} フロアID
+  # @param newId {String} フロアID
   #
   setFloorId: (newId, animation = true) ->
     if @floorId != newId
