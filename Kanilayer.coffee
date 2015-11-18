@@ -62,6 +62,7 @@ class Kanilayer extends ol.layer.Group
       minResolution: 0.0001
       maxResolution: 100
       kFloor: null
+      targetImageUrl: null
     merge = (obj1, obj2) ->
       if !obj2
         obj2 = {}
@@ -69,6 +70,9 @@ class Kanilayer extends ol.layer.Group
         if obj2.hasOwnProperty(attr)
           obj1[attr] = obj2[attr]
     merge(options_, options)
+
+    if options_.targetImageUrl?
+      @targetImageUrl = options_.targetImageUrl
 
     @tileA = new ol.layer.Tile({
       source: null
@@ -84,6 +88,7 @@ class Kanilayer extends ol.layer.Group
     })
 
     styleFunction = (feature, resolution) =>
+      styles = []
       if resolution < 1.0
         switch feature.get('type')
           when 'shelf'
@@ -91,25 +96,58 @@ class Kanilayer extends ol.layer.Group
               text = feature.get('label') ? ''
             else
               text = ''
-            if parseInt(@targetShelf)==parseInt(feature.get('id'))
-              styleOptions =
+            if parseInt(@targetShelf) == parseInt(feature.get('id'))
+              @targetPosition = feature
+              styles.push(new ol.style.Style(
                 stroke: new ol.style.Stroke(color: '#9E7E49', width: 2)
-                fill:new ol.style.Fill(color: '#FFBE4D')
+                fill: new ol.style.Fill(color: '#FFBE4D')
                 text: new ol.style.Text(
                   textAlign: 'center'
                   textBaseline: 'hanging'
                   font: 'Arial bold'
-                  text: "（目的地）"
+                  text: "目的地"
                   fill: new ol.style.Fill(color: '#D95C02')
                   stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 3)
                   scale: 2
                   offsetX: 0
                   offsetY: 0
                   rotation: 0)
-                zIndex: 9999
+              ))
+
+              size = (1 / resolution) * window.devicePixelRatio
+              if size >= 1
+                size = Math.max(size, 40 * window.devicePixelRatio)
+                styles.push(new ol.style.Style(
+                  image: new ol.style.Icon(
+                    anchor: [0.5, 1]
+                    scale: size / 233
+                    anchorXUnits: 'fraction'
+                    anchorYUnits: 'fraction'
+                    opacity: 1
+                    src: @targetImageUrl)
+                  geometry: (feature) ->
+                    coordinates = feature.getGeometry().getCoordinates()[0]
+                    return new ol.geom.Point(coordinates[2])
+                  zIndex: 9999
+                ))
+                ###
+                size = Math.max(size, 40 * window.devicePixelRatio)
+                styles.push(new ol.style.Style(
+                  image: new ol.style.Icon(
+                    anchor: [0.5, 1]
+                    scale: size / 233
+                    anchorXUnits: 'fraction'
+                    anchorYUnits: 'fraction'
+                    opacity: 1
+                    src: @targetImageUrl)
+                  geometry: (feature) ->
+                    coordinates = feature.getGeometry().getCoordinates()[0]
+                    return new ol.geom.Point(coordinates[0])
+                  zIndex: 9999
+                ))
+                ###
             else
-              styleOptions =
-                #stroke: new ol.style.Stroke(color: 'blue', width: 1)
+              styles.push(new ol.style.Style(
                 text: new ol.style.Text(
                   textAlign: 'center'
                   textBaseline: 'hanging'
@@ -121,9 +159,10 @@ class Kanilayer extends ol.layer.Group
                   offsetX: 0
                   offsetY: 0
                   rotation: 0)
+              ))
           when 'beacon'
-            if @debug_==true
-              styleOptions =
+            if @debug_ == true
+              styles.push(new ol.style.Style(
                 image: new ol.style.Circle({
                   radius: 5,
                   fill: null,
@@ -135,20 +174,15 @@ class Kanilayer extends ol.layer.Group
                   textAlign: 'left'
                   textBaseline: 'middle'
                   font: 'Arial 12px'
-                  text:  feature.get('minor')+ ' ('+feature.get('lane')+')'
+                  text: feature.get('minor') + ' (' + feature.get('lane') + ')'
                   fill: new ol.style.Fill(color: [0, 0, 0, 1])
                   stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 1.5)
                   scale: 1
                   offsetX: 8
                   offsetY: 0
                   rotation: 0)
-            else
-              styleOptions = {}
-          else
-            styleOptions = {}
-        return [new ol.style.Style(styleOptions)]
-      else
-        return [new ol.style.Style()]
+              ))
+      return styles
 
     @vector = new ol.layer.Vector(
       source: null
@@ -158,7 +192,7 @@ class Kanilayer extends ol.layer.Group
 
     options_.layers = [@tileB, @tileA, @vector]
     super(options_)
-    @tileA.on 'postcompose', @postcompose_, @
+    @vector.on 'postcompose', @postcompose_, @
     @tileA.on 'precompose', @precompose_, @
     if options_.kFloor?
       @setFloorId(options_.kFloor, false)
@@ -282,4 +316,4 @@ class Kanilayer extends ol.layer.Group
 
   # 目的地の画像URL
   targetImageUrl: null
-  
+  targetPosition: null

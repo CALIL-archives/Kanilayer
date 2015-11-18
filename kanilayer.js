@@ -45,7 +45,8 @@ Kanilayer = (function(superClass) {
     options_ = {
       minResolution: 0.0001,
       maxResolution: 100,
-      kFloor: null
+      kFloor: null,
+      targetImageUrl: null
     };
     merge = function(obj1, obj2) {
       var attr, results;
@@ -63,6 +64,9 @@ Kanilayer = (function(superClass) {
       return results;
     };
     merge(options_, options);
+    if (options_.targetImageUrl != null) {
+      this.targetImageUrl = options_.targetImageUrl;
+    }
     this.tileA = new ol.layer.Tile({
       source: null,
       opacity: 1,
@@ -76,7 +80,8 @@ Kanilayer = (function(superClass) {
     });
     styleFunction = (function(_this) {
       return function(feature, resolution) {
-        var ref, styleOptions, text;
+        var ref, size, styles, text;
+        styles = [];
         if (resolution < 1.0) {
           switch (feature.get('type')) {
             case 'shelf':
@@ -86,7 +91,8 @@ Kanilayer = (function(superClass) {
                 text = '';
               }
               if (parseInt(_this.targetShelf) === parseInt(feature.get('id'))) {
-                styleOptions = {
+                _this.targetPosition = feature;
+                styles.push(new ol.style.Style({
                   stroke: new ol.style.Stroke({
                     color: '#9E7E49',
                     width: 2
@@ -98,7 +104,7 @@ Kanilayer = (function(superClass) {
                     textAlign: 'center',
                     textBaseline: 'hanging',
                     font: 'Arial bold',
-                    text: "（目的地）",
+                    text: "目的地",
                     fill: new ol.style.Fill({
                       color: '#D95C02'
                     }),
@@ -110,11 +116,47 @@ Kanilayer = (function(superClass) {
                     offsetX: 0,
                     offsetY: 0,
                     rotation: 0
-                  }),
-                  zIndex: 9999
-                };
+                  })
+                }));
+                size = (1 / resolution) * window.devicePixelRatio;
+                if (size >= 1) {
+                  size = Math.max(size, 40 * window.devicePixelRatio);
+                  styles.push(new ol.style.Style({
+                    image: new ol.style.Icon({
+                      anchor: [0.5, 1],
+                      scale: size / 233,
+                      anchorXUnits: 'fraction',
+                      anchorYUnits: 'fraction',
+                      opacity: 1,
+                      src: _this.targetImageUrl
+                    }),
+                    geometry: function(feature) {
+                      var coordinates;
+                      coordinates = feature.getGeometry().getCoordinates()[0];
+                      return new ol.geom.Point(coordinates[2]);
+                    },
+                    zIndex: 9999
+                  }));
+
+                  /*
+                  size = Math.max(size, 40 * window.devicePixelRatio)
+                  styles.push(new ol.style.Style(
+                    image: new ol.style.Icon(
+                      anchor: [0.5, 1]
+                      scale: size / 233
+                      anchorXUnits: 'fraction'
+                      anchorYUnits: 'fraction'
+                      opacity: 1
+                      src: @targetImageUrl)
+                    geometry: (feature) ->
+                      coordinates = feature.getGeometry().getCoordinates()[0]
+                      return new ol.geom.Point(coordinates[0])
+                    zIndex: 9999
+                  ))
+                   */
+                }
               } else {
-                styleOptions = {
+                styles.push(new ol.style.Style({
                   text: new ol.style.Text({
                     textAlign: 'center',
                     textBaseline: 'hanging',
@@ -132,12 +174,12 @@ Kanilayer = (function(superClass) {
                     offsetY: 0,
                     rotation: 0
                   })
-                };
+                }));
               }
               break;
             case 'beacon':
               if (_this.debug_ === true) {
-                styleOptions = {
+                styles.push(new ol.style.Style({
                   image: new ol.style.Circle({
                     radius: 5,
                     fill: null,
@@ -162,18 +204,11 @@ Kanilayer = (function(superClass) {
                     offsetY: 0,
                     rotation: 0
                   })
-                };
-              } else {
-                styleOptions = {};
+                }));
               }
-              break;
-            default:
-              styleOptions = {};
           }
-          return [new ol.style.Style(styleOptions)];
-        } else {
-          return [new ol.style.Style()];
         }
+        return styles;
       };
     })(this);
     this.vector = new ol.layer.Vector({
@@ -183,7 +218,7 @@ Kanilayer = (function(superClass) {
     });
     options_.layers = [this.tileB, this.tileA, this.vector];
     Kanilayer.__super__.constructor.call(this, options_);
-    this.tileA.on('postcompose', this.postcompose_, this);
+    this.vector.on('postcompose', this.postcompose_, this);
     this.tileA.on('precompose', this.precompose_, this);
     if (options_.kFloor != null) {
       this.setFloorId(options_.kFloor, false);
@@ -319,6 +354,8 @@ Kanilayer = (function(superClass) {
   };
 
   Kanilayer.prototype.targetImageUrl = null;
+
+  Kanilayer.prototype.targetPosition = null;
 
   return Kanilayer;
 
