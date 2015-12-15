@@ -11589,27 +11589,27 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       e.preventDefault();
       try {
         parent.frames.list.$('#search input').focus().select();
-      } catch (undefined) {}
+      } catch (_error) {}
       try {
         return $('#search input').focus().select();
-      } catch (undefined) {}
+      } catch (_error) {}
     });
     key('esc', function() {
       try {
         parent.frames.list.$('#search input').blur();
         parent.frames.main.$('#help').hide();
         parent.frames.main.$('#fuzzySearch').hide();
-      } catch (undefined) {}
+      } catch (_error) {}
       try {
         parent.$("#search .active").click();
         parent.$('#help').hide();
         parent.$('#fuzzySearch').hide();
-      } catch (undefined) {}
+      } catch (_error) {}
       try {
         $('#search input').blur();
         $('#help').hide();
         return $('#fuzzySearch').hide();
-      } catch (undefined) {}
+      } catch (_error) {}
     });
     key('l', function() {
       var body;
@@ -11638,13 +11638,12 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       return loadSearch('extra_list.html', 'extra_list_link');
     });
     key('h', function() {
-      var error;
       try {
         return parent.frames.main.$('#help').toggle();
-      } catch (error) {
+      } catch (_error) {
         try {
           return $('#help').toggle();
-        } catch (undefined) {}
+        } catch (_error) {}
       }
     });
     return key('t', function(e) {
@@ -11652,11 +11651,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       try {
         $('#fuzzySearch').toggle();
         $('#fuzzySearch input').focus().select();
-      } catch (undefined) {}
+      } catch (_error) {}
       try {
         parent.frames.main.$('#fuzzySearch').show();
         return parent.frames.main.$('#fuzzySearch input').focus().select();
-      } catch (undefined) {}
+      } catch (_error) {}
     });
   });
 

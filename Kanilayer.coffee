@@ -22,12 +22,16 @@ class Kanilayer extends ol.layer.Group
   # @nodoc アニメーション用の内部ステート
   fadeAnimation: null
 
-  targetShelf: null
-
+  targetShelves: []
   # 強調表示する棚IDを指定
   setTargetShelf: (id)->
-    @targetShelf = id
+    @targetShelves = [{'id': id}]
     @vector.changed()
+
+  setTargetShelves: (ids)->
+    @targetShelves = ids
+    @vector.changed()
+
 
   # 配架図のタイルソースオブジェクトを取得
   #　
@@ -63,6 +67,7 @@ class Kanilayer extends ol.layer.Group
       maxResolution: 100
       kFloor: null
       targetImageUrl: null
+      targetImageUrl2: null
     merge = (obj1, obj2) ->
       if !obj2
         obj2 = {}
@@ -73,6 +78,8 @@ class Kanilayer extends ol.layer.Group
 
     if options_.targetImageUrl?
       @targetImageUrl = options_.targetImageUrl
+    if options_.targetImageUrl2?
+      @targetImageUrl2 = options_.targetImageUrl2
 
     @tileA = new ol.layer.Tile({
       source: null
@@ -96,56 +103,115 @@ class Kanilayer extends ol.layer.Group
               text = feature.get('label') ? ''
             else
               text = ''
-            if parseInt(@targetShelf) == parseInt(feature.get('id'))
-              @targetPosition = feature
-              styles.push(new ol.style.Style(
-                stroke: new ol.style.Stroke(color: '#9E7E49', width: 2)
-                fill: new ol.style.Fill(color: '#FFBE4D')
-                text: new ol.style.Text(
-                  textAlign: 'center'
-                  textBaseline: 'hanging'
-                  font: 'Arial bold'
-                  text: "目的地"
-                  fill: new ol.style.Fill(color: '#D95C02')
-                  stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 3)
-                  scale: 2
-                  offsetX: 0
-                  offsetY: 0
-                  rotation: 0)
-              ))
 
-              size = (1 / resolution) * window.devicePixelRatio
-              if size >= 1
-                size = Math.max(size, 40 * window.devicePixelRatio)
+            index = -1
+            index_ = 0
+            side = null
+            for shelf in @targetShelves
+              if shelf.id == parseInt(feature.get('id'))
+                index = index_
+                if shelf.side?
+                  side = shelf.side
+
+                break
+              index_++
+
+            if index != -1
+              @targetPosition = feature
+              if index >= 1
                 styles.push(new ol.style.Style(
-                  image: new ol.style.Icon(
-                    anchor: [0.5, 1]
-                    scale: size / 233
-                    anchorXUnits: 'fraction'
-                    anchorYUnits: 'fraction'
-                    opacity: 1
-                    src: @targetImageUrl)
-                  geometry: (feature) ->
-                    coordinates = feature.getGeometry().getCoordinates()[0]
-                    return new ol.geom.Point(coordinates[2])
-                  zIndex: 9999
+                  stroke: new ol.style.Stroke(color: '#9E7E49', width: 2)
+                  fill: new ol.style.Fill(color: '#FFBE4D')
+                  geometry: (feature)->
+                    a = feature.getGeometry().getCoordinates()[0][0]
+                    b = feature.getGeometry().getCoordinates()[0][1]
+                    c = feature.getGeometry().getCoordinates()[0][2]
+                    d = feature.getGeometry().getCoordinates()[0][3]
+                    size = (1 / resolution) * window.devicePixelRatio
+                    if side == 'a' and size >= 30
+                      c_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
+                      d_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
+                      return new ol.geom.Polygon([[a, b, c_, d_, a]])
+                    else if side == 'b' and size >= 30
+                      b_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
+                      a_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
+                      return new ol.geom.Polygon([[a_, b_, c, d, a_]])
+                    else
+                      return new ol.geom.Polygon([[a, b, c, d, a]])
                 ))
-                ###
-                size = Math.max(size, 40 * window.devicePixelRatio)
+              else
                 styles.push(new ol.style.Style(
-                  image: new ol.style.Icon(
-                    anchor: [0.5, 1]
-                    scale: size / 233
-                    anchorXUnits: 'fraction'
-                    anchorYUnits: 'fraction'
-                    opacity: 1
-                    src: @targetImageUrl)
-                  geometry: (feature) ->
-                    coordinates = feature.getGeometry().getCoordinates()[0]
-                    return new ol.geom.Point(coordinates[0])
-                  zIndex: 9999
+                  zIndex: 9998
+                  stroke: new ol.style.Stroke(color: '#9E7E49', width: 2)
+                  fill: new ol.style.Fill(color: '#FFBE4D')
+                  geometry: (feature)->
+                    a = feature.getGeometry().getCoordinates()[0][0]
+                    b = feature.getGeometry().getCoordinates()[0][1]
+                    c = feature.getGeometry().getCoordinates()[0][2]
+                    d = feature.getGeometry().getCoordinates()[0][3]
+                    size = (1 / resolution) * window.devicePixelRatio
+                    console.log size
+                    if side == 'a' and size >= 30
+                      c_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
+                      d_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
+                      return new ol.geom.Polygon([[a, b, c_, d_, a]])
+                    else if side == 'b' and size >= 30
+                      b_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
+                      a_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
+                      return new ol.geom.Polygon([[a_, b_, c, d, a_]])
+                    else
+                      return new ol.geom.Polygon([[a, b, c, d, a]])
                 ))
-                ###
+
+                size = (1 / resolution) * window.devicePixelRatio
+                if size >= 1
+                  size = Math.max(size, 40 * window.devicePixelRatio)
+                  if size > 50
+                    url = @targetImageUrl
+                    message = 'ここ！'
+                  else
+                    url = @targetImageUrl2
+                    message = '目的地'
+                  console.log url,size
+                  styles.push(new ol.style.Style(
+                    text: new ol.style.Text(
+                      textAlign: 'left'
+                      textBaseline: 'hanging'
+                      font: 'Arial bold'
+                      text: message
+                      fill: new ol.style.Fill(color: '#D95C02')
+                      stroke: new ol.style.Stroke(color: [255, 255, 255, 1], width: 3)
+                      scale: 2
+                      offsetX: 25
+                      offsetY: -40
+                      rotation: 0)
+                    image: new ol.style.Icon(
+                      anchor: [0.5, 1]
+                      scale: size / 233
+                      anchorXUnits: 'fraction'
+                      anchorYUnits: 'fraction'
+                      opacity: 1
+                      src: url)
+                    geometry: (feature) ->
+                      a = feature.getGeometry().getCoordinates()[0][0]
+                      b = feature.getGeometry().getCoordinates()[0][1]
+                      c = feature.getGeometry().getCoordinates()[0][2]
+                      d = feature.getGeometry().getCoordinates()[0][3]
+                      size = (1 / resolution) * window.devicePixelRatio
+                      if side == 'a' and size >= 30
+                        diff_ad = [(d[0] - a[0]) / 2, (d[1] - a[1]) / 2]
+                        ab = [(a[0] + b[0]) / 2 - diff_ad[0] * 2, (a[1] + b[1]) / 2 - diff_ad[1] * 2]
+                        return new ol.geom.Point(ab)
+                      else if side == 'b' and size >= 30
+                        diff_ad = [(d[0] - a[0]) / 2, (d[1] - a[1]) / 2]
+                        cd = [(c[0] + d[0]) / 2 + diff_ad[0] * 1.5, (c[1] + d[1]) / 2 + diff_ad[1] * 1.5]
+                        return new ol.geom.Point(cd)
+                      else
+                        abcd = [(a[0] + b[0] + c[0] + d[0]) / 4, (a[1] + b[1] + c[1] + d[1]) / 4]
+                        return new ol.geom.Point(abcd)
+                    zIndex: 9999
+                  ))
+
             else
               styles.push(new ol.style.Style(
                 text: new ol.style.Text(

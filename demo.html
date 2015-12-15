@@ -38,9 +38,10 @@
 
 
     <button onclick="kLayer.setTargetShelf(83);">棚1</button>
+    <button onclick="kLayer.setTargetShelves([{'id':83},{'id':40}]);">棚複数</button>
 
-    <button onclick="kLayer.setTargetShelf('83,a');">棚1-A面</button>
-    <button onclick="kLayer.setTargetShelf('83,b');">棚1-B面</button>
+    <button onclick="kLayer.setTargetShelves([{'id':83,'side':'a'}]);">棚1-A面</button>
+    <button onclick="kLayer.setTargetShelves([{'id':83,'side':'b'}]);">棚1-B面</button>
 
     <br/>
     デバッグ表示
@@ -55,7 +56,7 @@
     view = new ol.View({center: ol.proj.transform([137.528032, 35.573162], 'EPSG:4326', 'EPSG:3857'), zoom: 20});
 
     // 配架図レイヤーを作成
-    kLayer = new Kanilayer({kFloor: 16,targetImageUrl:'demo/target.png'});
+    kLayer = new Kanilayer({kFloor: 16,targetImageUrl:'demo/target.png',targetImageUrl2:'demo/flag2.png'});
 
     map = new ol.Map({
         layers: [new ol.layer.Tile({

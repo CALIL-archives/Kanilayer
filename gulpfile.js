@@ -13,7 +13,7 @@ gulp.task('codo', function () {
     );
 });
 
-gulp.task('default', ['codo'], function () {
+gulp.task('default', [], function () {
     return gulp.src('kanilayer.coffee')
         .pipe(coffee({bare: true}).on('error', gutil.log))
         .pipe(gulp.dest('./')
