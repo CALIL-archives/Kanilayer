@@ -165,13 +165,14 @@ class Kanilayer extends ol.layer.Group
 
                 size = (1 / resolution) * window.devicePixelRatio
                 if size >= 1
-                  size = Math.max(size, 40 * window.devicePixelRatio)
-                  if size > 50
+                  if size > 20*window.devicePixelRatio
                     url = @targetImageUrl
                     message = 'ここ！'
+                    size = Math.max(size, 60 * window.devicePixelRatio)
                   else
                     url = @targetImageUrl2
                     message = '目的地'
+                    size = Math.max(size, 40 * window.devicePixelRatio)
                   console.log url,size
                   styles.push(new ol.style.Style(
                     text: new ol.style.Text(

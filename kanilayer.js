@@ -182,13 +182,14 @@ Kanilayer = (function(superClass) {
                   }));
                   size = (1 / resolution) * window.devicePixelRatio;
                   if (size >= 1) {
-                    size = Math.max(size, 40 * window.devicePixelRatio);
-                    if (size > 50) {
+                    if (size > 20 * window.devicePixelRatio) {
                       url = _this.targetImageUrl;
                       message = 'ここ！';
+                      size = Math.max(size, 60 * window.devicePixelRatio);
                     } else {
                       url = _this.targetImageUrl2;
                       message = '目的地';
+                      size = Math.max(size, 40 * window.devicePixelRatio);
                     }
                     console.log(url, size);
                     styles.push(new ol.style.Style({
