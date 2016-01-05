@@ -146,11 +146,11 @@ Kanilayer = (function(superClass) {
                       c = feature.getGeometry().getCoordinates()[0][2];
                       d = feature.getGeometry().getCoordinates()[0][3];
                       size = (1 / resolution) * window.devicePixelRatio;
-                      if (side === 'a' && size >= 30) {
+                      if (side === 'a' && size >= 20) {
                         c_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
                         d_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2];
                         return new ol.geom.Polygon([[a, b, c_, d_, a]]);
-                      } else if (side === 'b' && size >= 30) {
+                      } else if (side === 'b' && size >= 20) {
                         b_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
                         a_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2];
                         return new ol.geom.Polygon([[a_, b_, c, d, a_]]);
@@ -177,11 +177,11 @@ Kanilayer = (function(superClass) {
                       d = feature.getGeometry().getCoordinates()[0][3];
                       size = (1 / resolution) * window.devicePixelRatio;
                       console.log(size);
-                      if (side === 'a' && size >= 30) {
+                      if (side === 'a' && size >= 20) {
                         c_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
                         d_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2];
                         return new ol.geom.Polygon([[a, b, c_, d_, a]]);
-                      } else if (side === 'b' && size >= 30) {
+                      } else if (side === 'b' && size >= 20) {
                         b_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
                         a_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2];
                         return new ol.geom.Polygon([[a_, b_, c, d, a_]]);
@@ -192,7 +192,7 @@ Kanilayer = (function(superClass) {
                   }));
                   size = (1 / resolution) * window.devicePixelRatio;
                   if (size >= 1) {
-                    if (size > 30 * window.devicePixelRatio) {
+                    if (size > 20 * window.devicePixelRatio) {
                       url = _this.targetImageUrl;
                       message = 'ここ！';
                       size = Math.max(size, 60 * window.devicePixelRatio);
