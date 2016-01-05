@@ -113,11 +113,11 @@ class Kanilayer extends ol.layer.Group
                   if side is null
                     side = shelf.side
                   else
-                    if side=='a' and shelf.side=='b'
-                      side=null
+                    if side == 'a' and shelf.side == 'b'
+                      side = null
                       break
-                    if side=='b' and shelf.side=='a'
-                      side=null
+                    if side == 'b' and shelf.side == 'a'
+                      side = null
                       break
                 index = index_
               index_++
@@ -134,11 +134,11 @@ class Kanilayer extends ol.layer.Group
                     c = feature.getGeometry().getCoordinates()[0][2]
                     d = feature.getGeometry().getCoordinates()[0][3]
                     size = (1 / resolution) * window.devicePixelRatio
-                    if side == 'a' and size >=20
+                    if side == 'a' and size >= 20 * window.devicePixelRatio
                       c_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
                       d_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
                       return new ol.geom.Polygon([[a, b, c_, d_, a]])
-                    else if side == 'b' and size >= 20
+                    else if side == 'b' and size >= 20 * window.devicePixelRatio
                       b_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
                       a_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
                       return new ol.geom.Polygon([[a_, b_, c, d, a_]])
@@ -157,11 +157,11 @@ class Kanilayer extends ol.layer.Group
                     d = feature.getGeometry().getCoordinates()[0][3]
                     size = (1 / resolution) * window.devicePixelRatio
                     console.log size
-                    if side == 'a' and size >= 20
+                    if side == 'a' and size >= 20 * window.devicePixelRatio
                       c_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
                       d_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
                       return new ol.geom.Polygon([[a, b, c_, d_, a]])
-                    else if side == 'b' and size >= 20
+                    else if side == 'b' and size >= 20 * window.devicePixelRatio
                       b_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2]
                       a_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2]
                       return new ol.geom.Polygon([[a_, b_, c, d, a_]])
@@ -171,15 +171,15 @@ class Kanilayer extends ol.layer.Group
 
                 size = (1 / resolution) * window.devicePixelRatio
                 if size >= 1
-                  if size > 20*window.devicePixelRatio
+                  if size > 20 * window.devicePixelRatio
                     url = @targetImageUrl
                     message = 'ここ！'
-                    size = Math.max(size, 60 * window.devicePixelRatio)
+                    size = Math.max(size, 45 * window.devicePixelRatio)
                   else
                     url = @targetImageUrl2
                     message = '目的地'
                     size = Math.max(size, 40 * window.devicePixelRatio)
-                  console.log url,size
+                  console.log url, size
                   styles.push(new ol.style.Style(
                     text: new ol.style.Text(
                       textAlign: 'left'
@@ -205,11 +205,11 @@ class Kanilayer extends ol.layer.Group
                       c = feature.getGeometry().getCoordinates()[0][2]
                       d = feature.getGeometry().getCoordinates()[0][3]
                       size = (1 / resolution) * window.devicePixelRatio
-                      if side == 'a' and size >= 30
+                      if side == 'a' and size >= 20* window.devicePixelRatio
                         diff_ad = [(d[0] - a[0]) / 2, (d[1] - a[1]) / 2]
                         ab = [(a[0] + b[0]) / 2 - diff_ad[0] * 2, (a[1] + b[1]) / 2 - diff_ad[1] * 2]
                         return new ol.geom.Point(ab)
-                      else if side == 'b' and size >= 30
+                      else if side == 'b' and size >= 20* window.devicePixelRatio
                         diff_ad = [(d[0] - a[0]) / 2, (d[1] - a[1]) / 2]
                         cd = [(c[0] + d[0]) / 2 + diff_ad[0] * 1.5, (c[1] + d[1]) / 2 + diff_ad[1] * 1.5]
                         return new ol.geom.Point(cd)

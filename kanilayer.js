@@ -146,11 +146,11 @@ Kanilayer = (function(superClass) {
                       c = feature.getGeometry().getCoordinates()[0][2];
                       d = feature.getGeometry().getCoordinates()[0][3];
                       size = (1 / resolution) * window.devicePixelRatio;
-                      if (side === 'a' && size >= 20) {
+                      if (side === 'a' && size >= 20 * window.devicePixelRatio) {
                         c_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
                         d_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2];
                         return new ol.geom.Polygon([[a, b, c_, d_, a]]);
-                      } else if (side === 'b' && size >= 20) {
+                      } else if (side === 'b' && size >= 20 * window.devicePixelRatio) {
                         b_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
                         a_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2];
                         return new ol.geom.Polygon([[a_, b_, c, d, a_]]);
@@ -177,11 +177,11 @@ Kanilayer = (function(superClass) {
                       d = feature.getGeometry().getCoordinates()[0][3];
                       size = (1 / resolution) * window.devicePixelRatio;
                       console.log(size);
-                      if (side === 'a' && size >= 20) {
+                      if (side === 'a' && size >= 20 * window.devicePixelRatio) {
                         c_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
                         d_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2];
                         return new ol.geom.Polygon([[a, b, c_, d_, a]]);
-                      } else if (side === 'b' && size >= 20) {
+                      } else if (side === 'b' && size >= 20 * window.devicePixelRatio) {
                         b_ = [(b[0] + c[0]) / 2, (b[1] + c[1]) / 2];
                         a_ = [(a[0] + d[0]) / 2, (a[1] + d[1]) / 2];
                         return new ol.geom.Polygon([[a_, b_, c, d, a_]]);
@@ -195,7 +195,7 @@ Kanilayer = (function(superClass) {
                     if (size > 20 * window.devicePixelRatio) {
                       url = _this.targetImageUrl;
                       message = 'ここ！';
-                      size = Math.max(size, 60 * window.devicePixelRatio);
+                      size = Math.max(size, 45 * window.devicePixelRatio);
                     } else {
                       url = _this.targetImageUrl2;
                       message = '目的地';
@@ -235,11 +235,11 @@ Kanilayer = (function(superClass) {
                         c = feature.getGeometry().getCoordinates()[0][2];
                         d = feature.getGeometry().getCoordinates()[0][3];
                         size = (1 / resolution) * window.devicePixelRatio;
-                        if (side === 'a' && size >= 30) {
+                        if (side === 'a' && size >= 20 * window.devicePixelRatio) {
                           diff_ad = [(d[0] - a[0]) / 2, (d[1] - a[1]) / 2];
                           ab = [(a[0] + b[0]) / 2 - diff_ad[0] * 2, (a[1] + b[1]) / 2 - diff_ad[1] * 2];
                           return new ol.geom.Point(ab);
-                        } else if (side === 'b' && size >= 30) {
+                        } else if (side === 'b' && size >= 20 * window.devicePixelRatio) {
                           diff_ad = [(d[0] - a[0]) / 2, (d[1] - a[1]) / 2];
                           cd = [(c[0] + d[0]) / 2 + diff_ad[0] * 1.5, (c[1] + d[1]) / 2 + diff_ad[1] * 1.5];
                           return new ol.geom.Point(cd);
