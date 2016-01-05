@@ -110,11 +110,21 @@ Kanilayer = (function(superClass) {
               for (i = 0, len = ref1.length; i < len; i++) {
                 shelf = ref1[i];
                 if (shelf.id === parseInt(feature.get('id'))) {
-                  index = index_;
                   if (shelf.side != null) {
-                    side = shelf.side;
+                    if (side === null) {
+                      side = shelf.side;
+                    } else {
+                      if (side === 'a' && shelf.side === 'b') {
+                        side = null;
+                        break;
+                      }
+                      if (side === 'b' && shelf.side === 'a') {
+                        side = null;
+                        break;
+                      }
+                    }
                   }
-                  break;
+                  index = index_;
                 }
                 index_++;
               }
@@ -182,7 +192,7 @@ Kanilayer = (function(superClass) {
                   }));
                   size = (1 / resolution) * window.devicePixelRatio;
                   if (size >= 1) {
-                    if (size > 20 * window.devicePixelRatio) {
+                    if (size > 30 * window.devicePixelRatio) {
                       url = _this.targetImageUrl;
                       message = 'ここ！';
                       size = Math.max(size, 60 * window.devicePixelRatio);

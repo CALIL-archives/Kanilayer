@@ -104,16 +104,22 @@ class Kanilayer extends ol.layer.Group
             else
               text = ''
 
-            index = -1
+            index = -1 # 該当したレコードの順位
             index_ = 0
             side = null
             for shelf in @targetShelves
               if shelf.id == parseInt(feature.get('id'))
-                index = index_
                 if shelf.side?
-                  side = shelf.side
-
-                break
+                  if side is null
+                    side = shelf.side
+                  else
+                    if side=='a' and shelf.side=='b'
+                      side=null
+                      break
+                    if side=='b' and shelf.side=='a'
+                      side=null
+                      break
+                index = index_
               index_++
 
             if index != -1
@@ -165,7 +171,7 @@ class Kanilayer extends ol.layer.Group
 
                 size = (1 / resolution) * window.devicePixelRatio
                 if size >= 1
-                  if size > 20*window.devicePixelRatio
+                  if size > 30*window.devicePixelRatio
                     url = @targetImageUrl
                     message = 'ここ！'
                     size = Math.max(size, 60 * window.devicePixelRatio)
