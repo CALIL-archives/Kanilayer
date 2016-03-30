@@ -17,6 +17,10 @@ Kanilayer = (function(superClass) {
 
   Kanilayer.prototype.fadeAnimation = null;
 
+  Kanilayer.prototype.targetMessage = 'ここ!';
+
+  Kanilayer.prototype.targetMessage2 = '目的地';
+
   Kanilayer.prototype.targetShelves = [];
 
   Kanilayer.prototype.setTargetShelf = function(id) {
@@ -194,11 +198,11 @@ Kanilayer = (function(superClass) {
                   if (size >= 1) {
                     if (size > 20 * window.devicePixelRatio) {
                       url = _this.targetImageUrl;
-                      message = 'ここ！';
+                      message = _this.targetMessage;
                       size = Math.max(size, 45 * window.devicePixelRatio);
                     } else {
                       url = _this.targetImageUrl2;
-                      message = '目的地';
+                      message = _this.targetMessage2;
                       size = Math.max(size, 40 * window.devicePixelRatio);
                     }
                     console.log(url, size);
