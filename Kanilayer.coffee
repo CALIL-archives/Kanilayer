@@ -22,6 +22,12 @@ class Kanilayer extends ol.layer.Group
   # @nodoc アニメーション用の内部ステート
   fadeAnimation: null
 
+  # @property [String] 目的地メッセージ 'ここ!'
+  targetMessage: 'ここ!'
+
+  # @property [String] 目的地メッセージ '目的地'
+  targetMessage2: '目的地'
+
   targetShelves: []
   # 強調表示する棚IDを指定
   setTargetShelf: (id)->
@@ -31,7 +37,6 @@ class Kanilayer extends ol.layer.Group
   setTargetShelves: (ids)->
     @targetShelves = ids
     @vector.changed()
-
 
   # 配架図のタイルソースオブジェクトを取得
   #　
@@ -173,11 +178,11 @@ class Kanilayer extends ol.layer.Group
                 if size >= 1
                   if size > 20 * window.devicePixelRatio
                     url = @targetImageUrl
-                    message = 'ここ！'
+                    message = @targetMessage
                     size = Math.max(size, 45 * window.devicePixelRatio)
                   else
                     url = @targetImageUrl2
-                    message = '目的地'
+                    message = @targetMessage2
                     size = Math.max(size, 40 * window.devicePixelRatio)
                   console.log url, size
                   styles.push(new ol.style.Style(
