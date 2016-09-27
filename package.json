@@ -9,6 +9,7 @@
   "dependencies": {
   },
   "devDependencies": {
+    "decafjs": "^0.6.2",
     "gulp": "^3.9.0",
     "gulp-codo": "^1.0.3",
     "gulp-coffee": "^2.3.1",
