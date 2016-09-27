@@ -1,4 +1,17 @@
+/**
+ * 配架図レイヤーを表示するOpenLayers3プラグイン
+ *
+ *  @author sakai@calil.jp
+ *  @author ryuuji@calil.jp
+ */
+
 class Kanilayer extends ol.layer.Group {
+
+  /**
+   * 強調表示する棚IDを指定
+   * @param id
+   * @returns {*|{min, max}}
+   */
   setTargetShelf(id) {
     this.targetShelves = [{
       "id": id
@@ -7,11 +20,22 @@ class Kanilayer extends ol.layer.Group {
     return this.vector.changed();
   }
 
+  /**
+   * @nodoc
+   * @param ids
+   * @returns {*|{min, max}}
+   */
   setTargetShelves(ids) {
     this.targetShelves = ids;
     return this.vector.changed();
   }
 
+  /**
+   * 配架図のタイルソースオブジェクトを取得
+   * @param id {String} フロアID
+   * @returns {ol.source.XYZ} タイルソース
+   * @private
+   */
   getHaikaTileSource_(id) {
     var xid = ("0000000000" + parseInt(id)).slice(-10);
 
@@ -21,6 +45,12 @@ class Kanilayer extends ol.layer.Group {
     });
   }
 
+  /**
+   * @nodoc 配架図のベクターソースオブジェクトを取得
+   * @param id {String} フロアID
+   * @returns {ol.source.Vector} ベクターソース
+   * @private
+   */
   getHaikaVectorSource_(id) {
     return new ol.source.Vector({
       url: ("https://app.haika.io/api/facility/2/" + (id) + ".geojson"),
@@ -28,6 +58,11 @@ class Kanilayer extends ol.layer.Group {
     });
   }
 
+  /**
+   * 配架図レイヤーを作成する
+   * @param options {Object} オプション
+   * @option kFloor {String} フロアID
+   */
   constructor(options) {
     var options_ = {
       minResolution: 0.0001,
@@ -53,6 +88,9 @@ class Kanilayer extends ol.layer.Group {
 
     merge(options_, options);
     var preThis = {};
+    preThis.targetImageUrl = null;
+    preThis.targetImageUrl2 = null;
+
 
     if (options_.targetImageUrl != null) {
       preThis.targetImageUrl = options_.targetImageUrl;
@@ -349,9 +387,18 @@ class Kanilayer extends ol.layer.Group {
 
     options_.layers = [preThis.tileB, preThis.tileA, preThis.vector];
     super(options_);
-    this.tileA = preThis.tileA;
-    this.tileB = preThis.tileB;
-    this.vector = preThis.vector;
+    this.tileA = preThis.tileA;  // @nodoc 前面タイル (メインで使用する)
+    this.tileB = preThis.tileB;  // @nodoc 背面タイル (切り替えの際に一時的に使用する)
+    this.vector = preThis.vector;  // @nodoc ベクターレイヤー
+    this.floorId = false;  // @property [String] 現在のフロアID（読み込み専用）
+    this.debug_ = false;  // @nodoc デバッグ表示の有無(内部ステート)
+    this.fadeAnimation = null;  // @nodoc アニメーション用の内部ステート
+    this.targetMessage = "ここ!";  // @property [String] 目的地メッセージ 'ここ!'
+    this.targetMessage2 = "目的地";  // @property [String] 目的地メッセージ '目的地'
+    this.targetShelves = [];
+    this.targetPosition = null;
+    this.targetImageUrl = preThis.targetImageUrl;
+    this.targetImageUrl2 = preThis.targetImageUrl2;
     this.vector.on("postcompose", this.postcompose_, this);
     this.tileA.on("precompose", this.precompose_, this);
 
@@ -360,6 +407,12 @@ class Kanilayer extends ol.layer.Group {
     }
   }
 
+  /**
+   * フロアを変更する
+   * @param newId {String} フロアID
+   * @param animation
+   * @returns {*|{min, max}}
+   */
   setFloorId(newId, animation = true) {
     var newSource;
 
@@ -424,11 +477,20 @@ class Kanilayer extends ol.layer.Group {
     }
   }
 
+  /**
+   * デバッグ表示の有無を設定する
+   * @param newValue {Boolean} する:true, しない: false
+   * @returns {*|{min, max}}
+   */
   showDebugInfomation(newValue) {
     this.debug_ = newValue;
     return this.changed();
   }
 
+  /**
+   * @nodoc マップ描画処理
+   * @private
+   */
   precompose_(event) {
     var time;
     var frameState = event.frameState;
@@ -473,6 +535,10 @@ class Kanilayer extends ol.layer.Group {
     }
   }
 
+  /**
+   * @nodoc マップ描画処理
+   * @private
+   */
   postcompose_(event) {
     var debugText;
     var context;
@@ -496,15 +562,3 @@ class Kanilayer extends ol.layer.Group {
     }
   }
 }
-
-Kanilayer.prototype.floorId = false;
-Kanilayer.prototype.tileA = null;
-Kanilayer.prototype.tileB = null;
-Kanilayer.prototype.vector = null;
-Kanilayer.prototype.debug_ = false;
-Kanilayer.prototype.fadeAnimation = null;
-Kanilayer.prototype.targetMessage = "ここ!";
-Kanilayer.prototype.targetMessage2 = "目的地";
-Kanilayer.prototype.targetShelves = [];
-Kanilayer.prototype.targetImageUrl = null;
-Kanilayer.prototype.targetPosition = null;
