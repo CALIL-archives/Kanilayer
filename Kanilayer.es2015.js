@@ -562,3 +562,9 @@ class Kanilayer extends ol.layer.Group {
     }
   }
 }
+
+// Deprecated
+// ひとまずこれまで通りグローバルで使えるようにしておく
+if (window) {
+  window.Kanilayer = Kanilayer;
+}
