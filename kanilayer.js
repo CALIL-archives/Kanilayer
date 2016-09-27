@@ -54,7 +54,7 @@ Kanilayer = (function(superClass) {
   };
 
   function Kanilayer(options) {
-    var merge, options_, styleFunction;
+    var merge, options_, preThis, styleFunction;
     options_ = {
       minResolution: 0.0001,
       maxResolution: 100,
@@ -78,18 +78,19 @@ Kanilayer = (function(superClass) {
       return results;
     };
     merge(options_, options);
+    preThis = {};
     if (options_.targetImageUrl != null) {
-      this.targetImageUrl = options_.targetImageUrl;
+      preThis.targetImageUrl = options_.targetImageUrl;
     }
     if (options_.targetImageUrl2 != null) {
-      this.targetImageUrl2 = options_.targetImageUrl2;
+      preThis.targetImageUrl2 = options_.targetImageUrl2;
     }
-    this.tileA = new ol.layer.Tile({
+    preThis.tileA = new ol.layer.Tile({
       source: null,
       opacity: 1,
       preload: 3
     });
-    this.tileB = new ol.layer.Tile({
+    preThis.tileB = new ol.layer.Tile({
       source: null,
       opacity: 0,
       visible: false,
@@ -312,13 +313,16 @@ Kanilayer = (function(superClass) {
         return styles;
       };
     })(this);
-    this.vector = new ol.layer.Vector({
+    preThis.vector = new ol.layer.Vector({
       source: null,
       style: styleFunction,
       opacity: 1
     });
-    options_.layers = [this.tileB, this.tileA, this.vector];
+    options_.layers = [preThis.tileB, preThis.tileA, preThis.vector];
     Kanilayer.__super__.constructor.call(this, options_);
+    this.tileA = preThis.tileA;
+    this.tileB = preThis.tileB;
+    this.vector = preThis.vector;
     this.vector.on('postcompose', this.postcompose_, this);
     this.tileA.on('precompose', this.precompose_, this);
     if (options_.kFloor != null) {

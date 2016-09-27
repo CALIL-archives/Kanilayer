@@ -81,18 +81,20 @@ class Kanilayer extends ol.layer.Group
           obj1[attr] = obj2[attr]
     merge(options_, options)
 
-    if options_.targetImageUrl?
-      @targetImageUrl = options_.targetImageUrl
-    if options_.targetImageUrl2?
-      @targetImageUrl2 = options_.targetImageUrl2
+    preThis = {}  # ES2015移行のためsuperの後ですべてthisへマージする
 
-    @tileA = new ol.layer.Tile({
+    if options_.targetImageUrl?
+      preThis.targetImageUrl = options_.targetImageUrl
+    if options_.targetImageUrl2?
+      preThis.targetImageUrl2 = options_.targetImageUrl2
+
+    preThis.tileA = new ol.layer.Tile({
       source: null
       opacity: 1
       preload: 3
     })
 
-    @tileB = new ol.layer.Tile({
+    preThis.tileB = new ol.layer.Tile({
       source: null
       opacity: 0
       visible: false
@@ -262,14 +264,18 @@ class Kanilayer extends ol.layer.Group
               ))
       return styles
 
-    @vector = new ol.layer.Vector(
+    preThis.vector = new ol.layer.Vector(
       source: null
       style: styleFunction
       opacity: 1
     )
 
-    options_.layers = [@tileB, @tileA, @vector]
+    options_.layers = [preThis.tileB, preThis.tileA, preThis.vector]
     super(options_)
+    @tileA = preThis.tileA
+    @tileB = preThis.tileB
+    @vector = preThis.vector
+
     @vector.on 'postcompose', @postcompose_, @
     @tileA.on 'precompose', @precompose_, @
     if options_.kFloor?
